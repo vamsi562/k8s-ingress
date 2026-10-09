@@ -64,4 +64,4 @@ Defined below annotations
     - alb.ingress.kubernetes.io/scheme: as we want alb to be public like keep it as internet-facing
     - alb.ingress.kubernetes.io/tags: we can provide tags
     - alb.ingress.kubernetes.io/target-type: it is required for communication with pods
-    - alb.ingress.kubernetes.io/group.name: group name which prevents from creating multiple lb for each app 
+    - alb.ingress.kubernetes.io/group.name: route traffic from the Application Load Balancer (ALB) to your Kubernetes cluster. ALB routes network traffic directly to the Pod's private IP address
