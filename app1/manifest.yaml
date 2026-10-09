@@ -59,7 +59,7 @@ spec:
       http:
         paths:
           - pathType: Prefix
-            path: "/app1"
+            path: "/"
             backend:
               service:
                 name: app1
