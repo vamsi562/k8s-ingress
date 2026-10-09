@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1
+  labels:
+    purpose: roboshop
+    environment: dev
+    app: app1
+  namespace: roboshop
+spec:
+  # Specify replicas to be created
+  replicas: 2
+  selector:
+    matchLabels:
+      purpose: roboshop
+      environment: dev
+      app: app1
+  template:
+    # pod definition
+    metadata:
+      labels:
+        purpose: roboshop
+        environment: dev
+        app: app1
+    spec:
+      containers:
+        - name: app1
+          image: vamsi562/app1:v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app1
+  namespace: roboshop
+  annotations:
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:055610219795:certificate/7af061ca-096e-458a-b300-dc306863dbc8
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/tags: Environment=dev,Project=roboshop
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb
+  selector:
+    purpose: roboshop
+    environment: dev
+    app: app1
+  ports:
+    - protocol: TCP
+      port: 80 #servicePort
+      targetPort: 80 #containerPort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app1
+spec:
+  rules:
+    - host: "app1.chikoo.fun"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/app1"
+            backend:
+              service:
+                name: app1
+                port:
+                  number: 80
